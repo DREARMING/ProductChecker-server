@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!-- struts的action配置文件 -->
+    <!-- 将action托管给spring -->
+    <constant name="struts.objectFactory" value="spring" />
+
+    <package name="base" extends="json-default">
+
+        <interceptors>
+            <interceptor name="tokenInterceptor" class="tokenInterceptor">
+                <param name="excludeMethods">login,saveImgFile</param>
+            </interceptor>
+
+            <!-- 拦截器栈 -->
+            <interceptor-stack name="myStack">
+                <interceptor-ref name="defaultStack">
+                    <param name="fileUpload.maximumSize">10485760</param>
+                    <param name="fileUpload.allowedTypes">image/*,text/plain,application/vnd.ms-powerpoint</param>
+                </interceptor-ref>
+               <!-- <interceptor-ref name="tokenInterceptor"></interceptor-ref>-->
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="myStack"></default-interceptor-ref>
+
+    </package>
+
+    <!-- 所有的action都应该放在对应的package下 -->
+    <!--action的class属性不再是具体的类,而是spring配置文件配置的bean id-->
+    <package name="default" namespace="/" extends="base">
+
+        <action name="login" class="userAction" method="login">
+            <result type="json" name="success">
+                <param name="root">result</param>
+            </result>
+        </action>
+
+    </package>
+
+    <package name="product" namespace="/" extends="base">
+        <global-results>
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </global-results>
+
+        <action name="addProduct" class="productAction" method="saveOrUpdatePd">
+        </action>
+
+        <action name="updateProduct" class="productAction" method="saveOrUpdatePd">
+        </action>
+
+        <action name="delProduct" class="productAction" method="delProduct">
+        </action>
+
+        <action name="queryPdList" class="productAction" method="getProductList">
+
+        </action>
+
+    </package>
+
+
+    <package name="checkCode" namespace="/" extends="base">
+        <global-results>
+            <result type="json">
+                <param name="root">result</param>
+            </result>
+        </global-results>
+
+
+
+        <action name="addCheckCode" class="checkAction" method="addCheckCode">
+        </action>
+
+        <action name="updateProduct" class="checkAction" method="updateCheckCode">
+        </action>
+
+        <action name="delProduct" class="checkAction" method="delCheckCode">
+        </action>
+
+        <action name="queryPdList" class="checkAction" method="getCheckCodeList">
+        </action>
+
+        <action name="checkCode" class="checkAction" method="checkCode">
+        </action>
+
+    </package>
+
+</struts>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.mvcoder.TestService" id="testService">
+        <property name="name" value="Heaksdj"></property>
+    </bean>
+
+
+    <!-- data connection -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/pdcheckerdb"></property>
+        <property name="username" value="root"/>
+        <property name="password" value="mvcoder"/>
+    </bean>
+
+    <!-- session factory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/pdcheckerdb</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.mvcoder.bean.Checkcode</value>
+                <value>com.mvcoder.bean.Product</value>
+                <value>com.mvcoder.bean.User</value>
+            </list>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:com/mvcoder/bean/Product.hbm.xml</value>
+                <value>classpath:com/mvcoder/bean/User.hbm.xml</value>
+                <value>classpath:com/mvcoder/bean/Checkcode.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--hibernate测试加入-->
+
+    <bean id="hibernateSessionFactory" class="com.mvcoder.dao.HibernateSessionFactory">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+    <bean id="baseHibernateDao" class="com.mvcoder.dao.BaseHibernateDao">
+        <property name="hibernateSessionFactory" ref="hibernateSessionFactory"></property>
+    </bean>
+
+    <bean id="tokenManager" class="com.mvcoder.security.TokenManager">
+    </bean>
+
+    <bean id="userDaoImpl" class="com.mvcoder.dao.UserDaoImpl" scope="prototype">
+        <property name="baseDao" ref="baseHibernateDao" />
+    </bean>
+
+    <bean id="userModel" class="com.mvcoder.models.UserModel" scope="prototype">
+        <property name="tokenManager" ref="tokenManager"></property>
+        <property name="userDao" ref="userDaoImpl" />
+    </bean>
+
+    <bean id="userAction" class="com.mvcoder.actions.UserAction" scope="prototype">
+        <property name="userModel" ref="userModel"></property>
+    </bean>
+
+
+    <bean id="tokenInterceptor" class="com.mvcoder.security.TokenInterceptor">
+        <property name="manager" ref="tokenManager"></property>
+    </bean>
+
+    <bean id="pdDaoImpl" class="com.mvcoder.dao.ProductDaoImpl" scope="prototype">
+        <property name="baseDao" ref="baseHibernateDao"></property>
+    </bean>
+
+    <bean id="productAction" class="com.mvcoder.actions.ProductAction" scope="prototype">
+        <property name="productDao" ref="pdDaoImpl" />
+    </bean>
+
+    <bean id="checkDaoImpl" class="com.mvcoder.dao.CheckCodeDaoImpl" scope="prototype">
+        <property name="baseDao" ref="baseHibernateDao"></property>
+    </bean>
+
+    <bean id="checkAction" class="com.mvcoder.actions.CheckCodeAction" scope="prototype">
+        <property name="checkDao" ref="checkDaoImpl" />
+    </bean>
+
+</beans>

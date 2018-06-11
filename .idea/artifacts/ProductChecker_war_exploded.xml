@@ -1,0 +1,24 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="ProductChecker:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/ProductChecker_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="ProductChecker/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="ProductChecker" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Spring-4.3.16.RELEASE" />
+          <element id="library" level="project" name="Struts 2-2.5.14.1" />
+          <element id="library" level="project" name="Hibernate 5.2.16-5.2.16" />
+          <element id="library" level="project" name="org.wisdom-framework:mysql-connector-java:5.1.34_1" />
+          <element id="library" level="project" name="commons-dbcp2-2.1.1" />
+          <element id="library" level="project" name="log4j:log4j:1.2.14" />
+          <element id="library" level="project" name="org.apache.struts:struts2-spring-plugin:2.5.14.1" />
+          <element id="library" level="project" name="com.google.code.gson:gson:2.8.5" />
+          <element id="library" level="project" name="lib" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
